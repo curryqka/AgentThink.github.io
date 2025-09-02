@@ -1,2 +1,484 @@
-AgentThink: A Unified Framework for Tool-Augmented Chain-of-Thought Reasoning in Vision-Language Models for Autonomous Driving
-E-mails: qka8203191007@163.com
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentThink: A Unified Framework for Tool‑Augmented Chain‑of‑Thought Reasoning in Vision‑Language Models for Autonomous Driving</title>
+  <meta name="description" content="AgentThink project page – tool‑augmented chain‑of‑thought reasoning framework for autonomous driving VLMs. Demos, results, setup, and citation." />
+  <meta property="og:title" content="AgentThink – Tool‑Augmented CoT for Autonomous Driving" />
+  <meta property="og:description" content="Demos • Results • Quick Start • Papers • Code" />
+  <meta property="og:type" content="website" />
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="assets/favicon.png" />
+  <style>
+    :root{
+      --bg: #0b1020; /* dark */
+      --card: #11172e;
+      --muted: #9fb0c7;
+      --text: #eaf1ff;
+      --brand: #6aa6ff;
+      --brand-2: #a8ffcb;
+      --chip: #1e2a4a;
+      --ring: #2f3e6e;
+      --good: #22c55e; /* green */
+      --warn: #f59e0b; /* amber */
+      --bad: #ef4444;  /* red */
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;--card:#ffffff;--muted:#50607a;--text:#0d1322;--brand:#2459ff;--brand-2:#0daa6e;--chip:#eef2ff;--ring:#dfe7ff
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; color:var(--text); background: radial-gradient(1200px 600px at 70% -10%, rgba(106,166,255,.20), transparent 60%), var(--bg)}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    code, pre{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    pre{background:var(--card);border:1px solid var(--ring);padding:1rem;border-radius:12px;overflow:auto}
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    .header{position:sticky;top:0;backdrop-filter:saturate(1.3) blur(8px);background: color-mix(in oklab, var(--bg), transparent 30%);border-bottom:1px solid var(--ring);z-index:50}
+    .header-inner{display:flex;gap:16px;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;padding:12px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand img{width:38px;height:38px;border-radius:9px;border:1px solid var(--ring);background:var(--card)}
+    .brand h1{font-size:16px;line-height:1.1;margin:0;font-weight:700}
+    nav{display:flex;gap:12px;flex-wrap:wrap}
+    nav a{padding:7px 10px;background:var(--chip);border:1px solid var(--ring);border-radius:10px}
+    .hero{display:grid;grid-template-columns: 1.2fr 0.8fr;gap:24px;align-items:center;margin-top:28px}
+    .hero h2{font-size:28px;margin:.2rem 0 1rem}
+    .lead{font-size:16px;color:var(--muted)}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--ring);font-weight:600}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--ring);background:var(--chip);font-size:13px}
+    .quote{padding:14px;border-left:4px solid var(--brand);background:linear-gradient(0deg, color-mix(in oklab, var(--brand), transparent 92%), transparent 92%);border-radius:10px}
+    .grid{display:grid;gap:16px}
+    .two{grid-template-columns: 1fr 1fr}
+    .three{grid-template-columns: repeat(3, 1fr)}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:18px}
+    .section{margin:38px 0}
+    .section h3{margin:0 0 12px;font-size:22px}
+    .section h4{margin:18px 0 8px;font-size:17px}
+    .kbd{padding:2px 6px;border:1px solid var(--ring);border-bottom-width:3px;border-radius:6px;background:var(--chip);font-family:inherit}
+    table{width:100%;border-collapse:collapse}
+    th, td{padding:10px;border-bottom:1px dashed var(--ring);vertical-align:top}
+    th{text-align:left}
+    .table-wrap{overflow:auto;border:1px solid var(--ring);border-radius:12px}
+    .status{font-weight:700}
+    .ok{color:var(--good)}.pending{color:var(--warn)}.nope{color:var(--bad)}
+    .toc{display:flex;gap:10px;flex-wrap:wrap}
+    .toc a{padding:8px 10px;border:1px solid var(--ring);border-radius:10px;background:var(--chip)}
+    .lang{display:flex;gap:10px;align-items:center}
+    .sr{position:absolute;left:-10000px}
+    .footer{margin:50px 0 20px;color:var(--muted);font-size:14px}
+    .kbd-row{display:grid;grid-template-columns: 1fr 1fr;gap:16px}
+    .mono{font-variant-ligatures:none}
+    .top-btn{position:fixed;right:18px;bottom:18px;padding:10px 12px;border-radius:999px;background:var(--brand);color:white;border:none;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    .video{border:1px solid var(--ring);border-radius:12px;overflow:hidden;background:var(--card)}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit, minmax(220px,1fr));gap:12px}
+    .gallery a{display:block;text-align:center;padding:10px;border:1px solid var(--ring);border-radius:12px;background:var(--chip)}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header class="header" aria-label="Main navigation">
+    <div class="header-inner">
+      <div class="brand">
+        <img src="assets/logo.png" alt="AgentThink Logo" />
+        <h1>AgentThink · Tool‑Augmented CoT for Autonomous Driving</h1>
+      </div>
+      <nav>
+        <a href="#highlights">Highlights</a>
+        <a href="#updates">Updates</a>
+        <a href="#setup">Setup</a>
+        <a href="#inference">Inference</a>
+        <a href="#results">Results</a>
+        <a href="#structure">Repo</a>
+        <a href="#license">License</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <span class="pill">EMNLP 2025 Findings</span>
+        <h2>AgentThink: A Unified Framework for <em>Tool‑Augmented Chain‑of‑Thought</em> Reasoning in Vision‑Language Models for Autonomous Driving</h2>
+        <p class="lead">Contact: <a href="mailto:qka23@mails.tsinghua.edu.cn">qka23@mails.tsinghua.edu.cn</a></p>
+        <div class="quote" role="note" aria-label="Xunzi quote">
+          <p>📜 <strong>“A gentleman is not inherently different from others; he excels by skillfully leveraging external tools.”</strong></p>
+          <p class="muted">— Xunzi. This philosophy aligns with AgentThink: by orchestrating tools & models, we achieve robust understanding and responses in complex driving scenarios.</p>
+        </div>
+        <div class="badges" style="margin-top:14px">
+          <a class="badge" href="#">🌐 Project Homepage</a>
+          <a class="badge" href="https://arxiv.org/abs/2505.15298" target="_blank" rel="noopener">📄 Paper Link</a>
+          <a class="badge" href="#updates">🔖 Latest Version v1.1</a>
+          <a class="badge" href="#license">🪪 License</a>
+        </div>
+        <div class="lang" style="margin-top:10px">
+          <span aria-hidden>🌏</span>
+          <button class="kbd" id="toggle-lang" type="button" title="Toggle page language">中文 ｜ English</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="video">
+          <!-- Replace src with your demo video file or YouTube embed -->
+          <video src="assets/demo.mp4" controls playsinline poster="assets/demo_poster.jpg" style="width:100%;height:auto"></video>
+        </div>
+        <p class="muted" style="margin-top:8px">🎬 Demo Showcase · “Experience AgentThink’s perception and planning in complex traffic.”</p>
+      </div>
+    </section>
+
+    <section class="section" id="contents">
+      <h3>Contents</h3>
+      <div class="toc">
+        <a href="#highlights">✨ Highlights</a>
+        <a href="#updates">📰 Project Updates</a>
+        <a href="#quicknav">🚀 Quick Navigation</a>
+        <a href="#setup">⚙️ Getting Started</a>
+        <a href="#inference">🚀 Quick Start & Inference</a>
+        <a href="#todo">📋 TODO List</a>
+        <a href="#results">📊 Benchmark & Paper Results</a>
+        <a href="#structure">📂 Repository Structure</a>
+        <a href="#related">🔗 Related Works</a>
+        <a href="#license">📜 License & Citation</a>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <h3>🎬 Demo Showcase</h3>
+      <p>Experience AgentThink's real‑world performance through demonstration materials that illustrate its capabilities in autonomous driving scenarios.</p>
+      <div class="grid two">
+        <div class="card">
+          <h4>Video Demonstration</h4>
+          <p>Watch this video to see AgentThink's environmental perception in complex traffic conditions:</p>
+          <div class="video"><video src="assets/demo_perception.mp4" controls playsinline poster="assets/demo_perception.jpg" style="width:100%"></video></div>
+        </div>
+        <div class="card">
+          <h4>Visualization Gallery</h4>
+          <div class="gallery">
+            <a href="#" aria-label="Daytime planning">Daytime Planning</a>
+            <a href="#" aria-label="Nighttime planning">Nighttime Planning</a>
+            <a href="#" aria-label="Zero‑shot learning">AgentThink zero‑shot learning</a>
+          </div>
+          <p class="muted" style="margin-top:8px">Complementing the video, these visualizations demonstrate key capabilities:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Scenario</th><th>Description</th><th>Image</th></tr></thead>
+              <tbody>
+                <tr><td>High‑level planning</td><td>Visualizes high‑level planning</td><td><a href="#">View</a></td></tr>
+                <tr><td>Spatial Understanding</td><td>Demonstrates spatial relationship analysis</td><td><a href="#">View</a></td></tr>
+                <tr><td>Environment Adaptability</td><td>Shows performance in adverse weather or low‑light</td><td><a href="#">View</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="highlights">
+      <h3>✨ Highlights</h3>
+      <ul>
+        <li>🔧 <strong>Tool‑Augmented Reasoning</strong>: Multi‑modal perception via integrated vision, prediction, occupancy, and mapping tools</li>
+        <li>🧠 <strong>Reasoning Chain + Tool Calls</strong>: Task decomposition with explicit tool invocation</li>
+        <li>🎯 <strong>GRPO Training</strong>: Triple reward signals (final answer, step‑wise, tool usage)</li>
+        <li>🚀 <strong>Performance Boost</strong>: <em>53.91% accuracy improvement</em> over traditional VLM models</li>
+      </ul>
+    </section>
+
+    <section class="section" id="updates">
+      <h3>📰 Project Updates</h3>
+      <ul>
+        <li>🎉 <strong>[2025‑08‑20]</strong> Our paper was accepted as <em>EMNLP 2025 Findings</em></li>
+        <li>🚀 <strong>[2025‑07‑02]</strong> v1.1 released with demo and sample data</li>
+        <li>📄 <strong>[2025‑05‑22]</strong> Paper published on arXiv</li>
+        <li>🎥 Web Demo and Swift full training pipeline coming soon</li>
+      </ul>
+    </section>
+
+    <section class="section" id="quicknav">
+      <h3>🚀 Quick Navigation</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Section</th><th>Description</th><th>Link</th></tr></thead>
+          <tbody>
+            <tr><td>Environment Setup</td><td>Install dependencies and setup</td><td><a href="#setup">Environment Setup</a></td></tr>
+            <tr><td>Model Inference</td><td>Real‑time inference on val set</td><td><a href="#inference">Model Inference</a></td></tr>
+            <tr><td>Demo Inference</td><td>Run demo on test set</td><td><a href="#demo-infer">Demo Inference</a></td></tr>
+            <tr><td>Evaluation Metrics</td><td>Scoring pipeline using LLM‑as‑Judge</td><td><a href="#eval">Evaluation Metrics</a></td></tr>
+            <tr><td>Benchmark Results</td><td>Quantitative performance comparisons</td><td><a href="#results">Benchmark Results</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="setup">
+      <h3>⚙️ Getting Started · Environment Setup</h3>
+      <h4>🛠️ Basic</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Version</th><th>Command</th></tr></thead>
+          <tbody>
+            <tr><td>OS</td><td>Ubuntu 20.04</td><td><code>cat /etc/issue</code></td></tr>
+            <tr><td>Python</td><td>3.10.12</td><td><code>python --version</code></td></tr>
+            <tr><td>CUDA Toolkit</td><td>12.4</td><td><code>nvcc --version</code></td></tr>
+            <tr><td>GPU Driver</td><td>535.129.03</td><td><code>nvidia-smi</code></td></tr>
+            <tr><td>PyTorch</td><td>2.6.0</td><td><code>print(torch.__version__)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Basic Setup</h4>
+      <pre><code class="mono"># Create virtual environment
+conda create -n agentthink python=3.10
+conda activate agentthink
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install ms-swift
+bash scripts/env.sh
+
+# Install drivemllm dependency
+bash scripts/env_drivemllm.sh</code></pre>
+
+      <h4>Clone ms‑swift</h4>
+      <pre><code class="mono">cd third_party
+git clone https://github.com/modelscope/ms-swift.git</code></pre>
+    </section>
+
+    <section class="section" id="inference">
+      <h3>Model Inference</h3>
+      <p>🎬 Use your trained checkpoint <strong>AgentThink</strong> to run inference on val samples <em>AgentThink‑CoT‑val</em>:</p>
+      <pre><code class="mono"># Inference script
+bash scripts/inference_scripts/inference.sh [your_CKPT_PATH] [your_OUTPUT_DIR]
+
+# Inference with tool script
+bash scripts/inference_scripts/inference_withtool.sh [your_CKPT_PATH] [your_OUTPUT_DIR]
+
+# Inference using multi-node GPUs
+bash scripts/inference_scripts/inference_multigpu.sh [your_CKPT_PATH] [your_OUTPUT_DIR]
+
+# Inference AgentThink
+bash scripts/inference_agentthink.sh [your_CKPT_PATH] [your_OUTPUT_DIR]</code></pre>
+    </section>
+
+    <section class="section" id="eval">
+      <h3>Evaluation Metrics</h3>
+      <p>📊 Use LLM‑as‑Judge to calculate performance metrics:</p>
+      <pre><code class="mono"># Evaluate reasoning ability and MCQ accuracy
+python evaluation/evaluation_script.py</code></pre>
+    </section>
+
+    <section class="section" id="quickstart">
+      <h3>🚀 Quick Start</h3>
+      <h4>Download the model</h4>
+      <p>Our AgentThink model based on the <strong>Qwen2.5‑VL‑7B</strong>.</p>
+
+      <h4>Download the tool model</h4>
+      <p>Clone the Depth Anything v2 <span class="pill">DAM</span> and YOLO‑World:</p>
+      <pre><code class="mono">git clone https://github.com/DepthAnything/Depth-Anything-V2
+
+git clone https://github.com/AILab-CVC/YOLO-World</code></pre>
+      <p>Then download the pretrain models in the YOLO‑World and DepthAnything.</p>
+
+      <h4>Download the basic tool results</h4>
+      <p>Download the <code>val.pkl</code> file from <a href="https://github.com/USC-GVL/Agent-Driver" target="_blank" rel="noopener">USC‑GVL / Agent‑Driver</a>.</p>
+
+      <h4>Folder structure</h4>
+      <pre><code class="mono">AgentThink/
+├── 📂 data/                    # Dataset and processed data
+│   ├── DriveLMMo1_TEST_tool_results.jsonl
+│   ├── DriveLMMo1_TEST.jsonl
+│   ├── 📂 image2concat/        # Concatenated image files
+│   └── 📂 tool_results/        # Results from tool processing
+│
+├── 📂 demo_image/              # Demonstration images
+│   ├── nuscenes_CAM_FRONT_3590.webp
+│   ├── nuscenes_CAM_FRONT_3757.webp
+│   └── nuscenes_CAM_FRONT_3896.webp
+│
+├── 📂 pretrained_model/        # Pre-trained model files
+│   ├── 📂 AgentThink/
+│   │   └── checkpoint-700-merged
+│   ├── depth_anything_v2_vitb.pth
+│   └── yolov8x-world2.pt
+│
+├── 📂 assets/                  # Visual assets and resources
+├── 📂 evaluation/              # Evaluation scripts and benchmarks
+├── 📂 Inference/               # Inference-related scripts and data
+├── 📂 results/                 # Output and result files
+├── 📂 scripts/                 # Various utility scripts
+├── 📂 third_party/             # Third-party libraries and resources
+├── README.cn.md                # Chinese documentation
+├── README.md                   # Project documentation
+├── requirements.txt            # Python dependencies
+└── ...                         # Other project files</code></pre>
+    </section>
+
+    <section class="section" id="demo-infer">
+      <h3>Demo Inference</h3>
+      <pre><code class="mono"># drivemllm
+python Inference/inference_demo_drivemllm.py
+
+# drivelmm-o1
+python Inference/inference_demo_drivelmm.py</code></pre>
+    </section>
+
+    <section class="section" id="todo">
+      <h3>📋 TODO List · Development Roadmap</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Status</th><th>Task Description</th></tr></thead>
+          <tbody>
+            <tr><td class="status ok">✅</td><td>AgentThink demo implementation</td></tr>
+            <tr><td class="status ok">✅</td><td>General reasoning evaluation metrics</td></tr>
+            <tr><td class="status pending">🔜</td><td>Tool‑specific evaluation metrics</td></tr>
+            <tr><td class="status pending">🔜</td><td>Data preprocessing pipeline</td></tr>
+            <tr><td class="status ok">✅</td><td>Debug example implementation</td></tr>
+            <tr><td class="status pending">🔜</td><td>Multi‑stage training framework</td></tr>
+            <tr><td class="status pending">🔜</td><td>Tool function interaction environment</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="results">
+      <h3>AgentThink Results</h3>
+
+      <h4>📊 DriveLMM‑o1 Performance</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vision Language Models</th>
+              <th>Risk Assess. (%) ↑</th>
+              <th>Rule Adh. (%) ↑</th>
+              <th>Scene Aware. (%) ↑</th>
+              <th>Relevance (%) ↑</th>
+              <th>Missing (%) ↑</th>
+              <th>Reason. (%) ↑</th>
+              <th>MCQ (%) ↑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>GPT‑4o [16]</td><td>71.32</td><td>80.72</td><td>72.96</td><td>76.65</td><td>71.43</td><td>72.52</td><td>57.84</td></tr>
+            <tr><td>Ovis1.5‑Gemma2‑9B [21]</td><td>51.34</td><td>66.36</td><td>54.74</td><td>55.72</td><td>55.74</td><td>55.62</td><td>48.85</td></tr>
+            <tr><td>Mulberry‑7B [45]</td><td>51.89</td><td>63.66</td><td>56.68</td><td>57.27</td><td>57.45</td><td>57.65</td><td>52.86</td></tr>
+            <tr><td>LLaVA‑CoT [43]</td><td>57.62</td><td>69.01</td><td>60.84</td><td>62.72</td><td>60.67</td><td>61.41</td><td>49.27</td></tr>
+            <tr><td>LlamaV‑o1 [34]</td><td>60.20</td><td>73.52</td><td>62.67</td><td>64.66</td><td>63.41</td><td>63.13</td><td>50.02</td></tr>
+            <tr><td>InternVL2.5‑8B [4]</td><td>69.02</td><td>78.43</td><td>71.52</td><td>75.80</td><td>70.54</td><td>71.62</td><td>54.87</td></tr>
+            <tr><td>Qwen2.5‑VL‑7B [1]</td><td>46.44</td><td>60.45</td><td>51.02</td><td>50.15</td><td>52.19</td><td>51.77</td><td>37.81</td></tr>
+            <tr><td>DriveLMM‑o1 [15]</td><td>73.01</td><td>81.56</td><td>75.39</td><td>79.42</td><td>74.49</td><td>75.24</td><td>62.36</td></tr>
+            <tr><td><strong>AgentThink (Ours)</strong></td><td><strong>80.51</strong></td><td><strong>84.98</strong></td><td><strong>82.11</strong></td><td><strong>84.99</strong></td><td><strong>79.56</strong></td><td><strong>79.68</strong></td><td><strong>71.35</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 style="margin-top:24px">📊 DriveMLLM Comparison</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th><th>Model</th><th>L/R</th><th>F/B</th><th>RHD</th><th>RD</th><th>PPos</th><th>BBox</th><th>CVD</th><th>CD</th><th>AccS</th><th>Overall</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Zero‑shot</td><td>GPT‑4o [16]</td><td>91.72</td><td>67.60</td><td>9.58</td><td>14.69</td><td>40.90</td><td>4.07</td><td>46.11</td><td>70.65</td><td>43.16</td><td>25.63</td></tr>
+            <tr><td>Zero‑shot</td><td>GPT‑4o‑mini</td><td>67.67</td><td>50.13</td><td>70.44</td><td>0.00</td><td>29.28</td><td>3.78</td><td>0.00</td><td>46.40</td><td>33.46</td><td>16.68</td></tr>
+            <tr><td>Zero‑shot</td><td>LLaVA‑ov‑72B [19]</td><td>85.42</td><td>49.48</td><td>13.76</td><td>45.27</td><td>16.46</td><td>0.00</td><td>42.97</td><td>27.09</td><td>35.06</td><td>21.10</td></tr>
+            <tr><td>Zero‑shot</td><td>Qwen2.5‑VL‑7B [1]</td><td>76.55</td><td>55.24</td><td>7.14</td><td>17.11</td><td>55.97</td><td>38.31</td><td>55.94</td><td>51.52</td><td>44.72</td><td>13.36</td></tr>
+            <tr><td>Zero‑shot</td><td>Qwen + CoT</td><td>87.06</td><td>63.09</td><td>16.69</td><td>22.56</td><td>52.51</td><td>38.87</td><td>76.90</td><td>38.71</td><td>49.55</td><td>19.31</td></tr>
+            <tr><td>Zero‑shot</td><td>Qwen + DirectTool</td><td>78.95</td><td>48.96</td><td>58.43</td><td>67.57</td><td>58.20</td><td>42.22</td><td>51.76</td><td>51.38</td><td>57.18</td><td>24.05</td></tr>
+            <tr><td>Zero‑shot</td><td><strong>AgentThink (Ours)</strong></td><td>82.33</td><td>54.40</td><td>56.14</td><td>61.45</td><td>70.45</td><td>56.23</td><td>23.09</td><td>51.60</td><td>56.96</td><td>26.52</td></tr>
+            <tr><td>One‑shot</td><td>GPT‑4o</td><td>91.08</td><td>69.37</td><td>36.51</td><td>71.17</td><td>42.44</td><td>5.10</td><td>0.00</td><td>63.88</td><td>47.44</td><td>33.17</td></tr>
+            <tr><td>One‑shot</td><td>GPT‑4o‑mini</td><td>66.00</td><td>48.95</td><td>83.02</td><td>58.47</td><td>25.71</td><td>3.97</td><td>52.73</td><td>55.23</td><td>49.26</td><td>22.13</td></tr>
+            <tr><td>One‑shot</td><td>LLaVA‑ov‑72B [19]</td><td>79.12</td><td>62.97</td><td>49.26</td><td>68.04</td><td>28.57</td><td>2.20</td><td>53.12</td><td>60.90</td><td>50.52</td><td>36.66</td></tr>
+            <tr><td>One‑shot</td><td>Qwen2.5‑VL‑7B [1]</td><td>80.30</td><td>53.14</td><td>36.96</td><td>39.13</td><td>62.69</td><td>22.63</td><td>49.88</td><td>48.32</td><td>49.13</td><td>33.53</td></tr>
+            <tr><td>One‑shot</td><td>Qwen + CoT</td><td>86.35</td><td>59.95</td><td>43.29</td><td>31.81</td><td>53.64</td><td>26.93</td><td>51.02</td><td>42.30</td><td>49.41</td><td>32.06</td></tr>
+            <tr><td>One‑shot</td><td>Qwen + DirectTool</td><td>84.57</td><td>55.50</td><td>67.32</td><td>59.54</td><td>85.58</td><td>26.07</td><td>52.34</td><td>53.25</td><td>60.52</td><td>42.27</td></tr>
+            <tr><td>One‑shot</td><td><strong>AgentThink (Ours)</strong></td><td>78.71</td><td>48.46</td><td>60.64</td><td>60.71</td><td>72.36</td><td>64.46</td><td>52.26</td><td>52.04</td><td>61.21</td><td><strong>47.24</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="structure">
+      <h3>📁 Repository Structure</h3>
+      <pre><code class="mono">AgentThink/
+├── assets/                 # Visual assets and resources
+├── data/                   # Data files and datasets
+├── evaluation/             # Evaluation scripts and benchmarks
+│   ├── evaluation_script.py
+│   └── inference_agentthink.py
+├── Inference/              # Inference-related scripts and data
+│   ├── inference_demo_data_drivemllm.json
+│   ├── inference_demo_data_drivelmm.json
+│   └── inference_demo_drivemllm.py
+├── results/                # Output and result files
+│   └── agentthink/
+├── scripts/                # Various utility scripts
+│   ├── debug_scripts/
+│   ├── inference_scripts/
+│   └── tools/              # Tool library implementations
+├── third_party/            # Third-party libraries and resources
+│   ├── 🐍 inference.py         # Main inference script
+│   ├── 🐍 prepare_data.py      # Data preparation script
+│   ├── 🐍 utlis.py             # Utility functions
+│   ├── 🐚 env.sh               # Environment setup script
+│   ├── 🐚 env_drivemllm.sh     # DriveMLLM environment script
+│   └── 🐚 prepare_json_data.sh # Long JSON data preparation script
+├── 📄 README.md            # Project documentation
+├── 📄 README_CN.md         # 中文文档
+├── 📄 requirements.txt     # Python dependencies</code></pre>
+    </section>
+
+    <section class="section" id="related">
+      <h3>🔗 Related Works</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Description</th><th>Link</th></tr></thead>
+          <tbody>
+            <tr><td>Depth‑Anything‑V2</td><td>High‑quality monocular depth estimation</td><td><a href="https://github.com/DepthAnything/Depth-Anything-V2" target="_blank" rel="noopener">GitHub</a></td></tr>
+            <tr><td>YOLO‑World</td><td>Open‑vocabulary object detection</td><td><a href="https://github.com/AILab-CVC/YOLO-World" target="_blank" rel="noopener">GitHub</a></td></tr>
+            <tr><td>all‑MiniLM</td><td>Extract language semantic similarity</td><td><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2" target="_blank" rel="noopener">HuggingFace</a></td></tr>
+            <tr><td>AgentDriver</td><td>Offer the tool results</td><td><a href="https://github.com/USC-GVL/Agent-Driver" target="_blank" rel="noopener">GitHub</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="license">
+      <h3>🪪 License & Citation</h3>
+      <h4>License</h4>
+      <p>This project is licensed under <strong>Apache License 2.0</strong>. See <code>LICENSE</code> file for details.</p>
+
+      <h4>Citation</h4>
+      <pre><code class="mono">@misc{qian2025agentthinkunifiedframeworktoolaugmented,
+  title={AgentThink: A Unified Framework for Tool-Augmented Chain-of-Thought Reasoning in Vision-Language Models for Autonomous Driving},
+  author={Kangan Qian et al.},
+  year={2025},
+  eprint={2505.15298},
+  archivePrefix={arXiv},
+  url={https://arxiv.org/abs/2505.15298},
+}</code></pre>
+    </section>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> AgentThink Team · <a href="mailto:qka23@mails.tsinghua.edu.cn">qka23@mails.tsinghua.edu.cn</a></p>
+    </footer>
+  </main>
+
+  <button class="top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+  <script>
+    // Year stamp
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Simple language toggle (stub)
+    document.getElementById('toggle-lang').addEventListener('click', () => {
+      const isCN = document.documentElement.lang === 'zh-CN';
+      document.documentElement.lang = isCN ? 'en' : 'zh-CN';
+      alert('Language toggled. (This is a placeholder. Replace with real i18n if needed.)');
+    });
+  </script>
+</body>
+</html>
